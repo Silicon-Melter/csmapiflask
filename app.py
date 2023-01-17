@@ -23,7 +23,7 @@ def extract_data(file_name):
             y=X, sr=sample_rate, n_mfcc=40).T, axis=0)
     except Exception as e:
         print("Error encountered while parsing file: ")
-    features = np.array(mfccs).reshape([-1, 1])
+        features = np.array(mfccs).reshape([-1, 1])
     print(mfccs)
     return features
 
@@ -44,23 +44,6 @@ def heart_rate(filename):
     true_index = index+min_index
     heartRate = 60/(true_index/fs)
     return heartRate
-
-""" 
-config = {
-    "apiKey": "AIzaSyAmrjkU6rxiZoAHnK4ylL4JPqFdZEWP-kw",
-    "authDomain": "mypros-283015.firebaseapp.com",
-    "databaseURL": "https://MYPROS.firebaseio.com",
-    "projectId": "mypros-283015",
-    "storageBucket": "mypros-283015.appspot.com",
-    "serviceAccount": "serviceAccountKey.json"
-}
-cred = credentials.Certificate("mypros-283015-firebase-adminsdk-eewnd-fa5c258fcf.json")
-firebase_admin.initialize_app(cred)
-firebase_storage = pyrebase.initialize_app(config)
-
-db = firestore.client()
-storage = firebase_storage.storage() """
-
 af = load_model('mir.h5')
 murmur = load_model('murmur.h5')
 
@@ -80,10 +63,10 @@ def audio():
     #adjust filename
     ch = '='
     listOfWords = url.split(ch, 1)
-    if len(listOfWords) > 0: 
+    if len(listOfWords) > 0:
         url_name = listOfWords[1]
     listOfWords = url.split(ch, 1)
-    if len(listOfWords) > 0: 
+    if len(listOfWords) > 0:
         url_name = listOfWords[1]
     filename = url_name+".mp3"
     print(filename)
@@ -91,10 +74,8 @@ def audio():
     response = requests.get(url)
     open(filename, "wb").write(response.content)
     #Processing
-    rate = heart_rate, (filename,)
-    extract = extract_data, (filename,)
-    features = extract.get()
-    heartRate = rate.get()
+    features = extract_data(filename)
+    heartRate = heart_rate(filename)
     #AI stuff
     data.append(features)
     af_result = af.predict(np.array(data))
@@ -107,6 +88,6 @@ def audio():
     print('Retrun: ', returnvalue)
     return(str(returnvalue))
 
-
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=80)
+    app.run()
+
