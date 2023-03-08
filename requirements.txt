@@ -1,7 +1,0 @@
-numpy
-librosa
-flask
-tensorflow
-requests
-scipy
-matplotlib
